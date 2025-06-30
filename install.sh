@@ -76,7 +76,7 @@ fi
 
 read -p "Install desktop? (y/n) " desktop_install
 if [[ "${desktop_install}" == "y" ]]; then
-  echo -e "Choices:\n  - plasma\n  - gnome\n  - others (only with full setup)"
+  echo -e "Choices:\n  - plasma\n  - gnome\n  - hyprland\n  - others (only with full setup)"
   read -p "Which one? " desktop
   if [[ ${desktop} =~ (^plasma.*|^gnome$|^cinnamon$|^hyprland$|^i3$) ]]; then
     true
@@ -327,6 +327,29 @@ if [[ "${desktop_install}" == "y" ]]; then
     "gnome")
       pacman -S --noconfirm --needed gnome gnome-extra gdm && \
         systemctl enable gdm
+      ;;
+
+    "hyprland")
+      pacman -S --noconfirm --needed \
+        hyprland \
+        hyprpaper \
+        hypridle \
+        hyprlock \
+        hyprsysteminfo \
+        hyprsunset \
+        hyprland-qt-support \
+        hyprpolkitagent \
+        hyprshot \
+        hyprcursor \
+        rose-pine-hyprcursor \
+        waybar \
+        network-manager-applet \
+        xdg-desktop-portal-hyprland \
+        brightnessctl \
+        mako \
+        uwsm \
+        sddm && \
+          systemctl enable sddm
       ;;
   esac
 fi
