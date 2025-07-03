@@ -348,6 +348,7 @@ if [[ "${desktop_install}" == "y" ]]; then
         brightnessctl \
         mako \
         uwsm \
+        nwg-look \
         sddm && \
           systemctl enable sddm
       ;;
