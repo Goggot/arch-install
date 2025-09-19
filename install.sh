@@ -88,10 +88,16 @@ fi
 
 if [[ "${INSTALL_TYPE}" == "full" ]]; then
   echo
-  read -p "SSH key path: " ssh_key_path
   mkdir -p /root/.ssh
-  cp "${ssh_key_path}" /root/.ssh/
-  chmod 600 "/root/.ssh/id_ed25519"
+  read -p "SSH key local or remote? " key_location
+  if [[ "${key_location}" == "local" ]]; then
+    read -p "Location (/path/to/key): " ssh_key_path
+    cp "${ssh_key_path}" /root/.ssh/
+  else
+    read -p "Location (user@ip:path): " remote_location
+    scp ${remote_location} /root/.ssh/
+  fi
+  chmod 600 "/root/.ssh/id_*"
 fi
 
 echo
