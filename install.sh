@@ -14,7 +14,7 @@ PACMAN_PARALLEL=100
 CLEARROOT=false
 MOUNTPOINT="/mnt/install"
 HERE="$(dirname "$(readlink -f "$0")")"
-DISKPART="${DISK}p"
+DISKPART="${DISK}"
 
 # Usage
 if [[ -z "${DISK}" ]]; then
