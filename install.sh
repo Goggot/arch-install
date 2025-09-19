@@ -348,7 +348,7 @@ if [[ "${desktop_install}" == "y" ]]; then
         brightnessctl \
         mako \
         uwsm \
-        nwg-look \
+        ngw-look \
         sddm && \
           systemctl enable sddm
       ;;
@@ -420,7 +420,7 @@ if [[ "${INSTALL_TYPE}" == "full" ]]; then
   # Install desktop
   if [[ "${desktop_install}" == 'y' ]]; then
     if [[ -f "/opt/linux-setup/platform/arch/packages/desktop-${desktop}" ]]; then
-      /opt/linux-setup/install.sh desktop-${desktop}
+      /opt/linux-setup/scripts/restore.bash
     else
       echo "Desktop not found"
     fi
