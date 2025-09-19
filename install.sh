@@ -274,7 +274,7 @@ EOF
 # Install ssh keys
 if [[ "${INSTALL_TYPE}" == "full" ]]; then
   mkdir -p "${MOUNTPOINT}/root/.ssh"
-  cp "${ssh_key_path}" "${MOUNTPOINT}/root/.ssh/"
+  cp /root/.ssh/id_* "${MOUNTPOINT}/root/.ssh/"
 fi
 
 
@@ -413,8 +413,9 @@ if [[ "${INSTALL_TYPE}" == "full" ]]; then
     git pull
   else
     cd /opt/
-    git clone git@github.com:Goggot/linux-setup.git
+    GIT_SSH_COMMAND="ssh -o StrictHostKeychecking=no" git clone git@github.com:Goggot/linux-setup.git
   fi
+
   cd -
 
   if [ -d '/opt/linux-setup' ]; then
@@ -423,14 +424,8 @@ if [[ "${INSTALL_TYPE}" == "full" ]]; then
     chmod -R a+x /opt/linux-setup
   fi
 
-  # Install desktop
-  if [[ "${desktop_install}" == 'y' ]]; then
-    if [[ -f "/opt/linux-setup/platform/arch/packages/desktop-${desktop}" ]]; then
-      /opt/linux-setup/scripts/restore.bash
-    else
-      echo "Desktop not found"
-    fi
-  fi
+  # Install configuration
+  /opt/linux-setup/scripts/restore.bash
 fi
 EOF
 
