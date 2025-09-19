@@ -254,7 +254,7 @@ EOF
 timedatectl set-ntp true
 sed -i "s|^#ParallelDownloads.*|ParallelDownloads = ${PACMAN_PARALLEL}|g" /etc/pacman.conf
 pacman -Syy
-pacman -S reflector --noconfirm
+pacman -S --noconfirm --needed reflector
 mkdir -p "${MOUNTPOINT}/etc/pacman.d" "/etc/pacman.d"
 echo
 echo -n "Determining 5 fastest mirrors in Canada... "
