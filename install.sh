@@ -95,9 +95,9 @@ if [[ "${INSTALL_TYPE}" == "full" ]]; then
     cp "${ssh_key_path}" /root/.ssh/
   else
     read -p "Location (user@ip:path): " remote_location
-    scp ${remote_location} /root/.ssh/
+    scp -o StrictHostKeychecking=no ${remote_location} /root/.ssh/
   fi
-  chmod 600 "/root/.ssh/id_*"
+  chmod 600 /root/.ssh/id_*
 fi
 
 echo
