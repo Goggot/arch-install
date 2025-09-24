@@ -451,7 +451,7 @@ if [[ "${INSTALL_TYPE}" == "full" ]]; then
     GIT_SSH_COMMAND="ssh -o StrictHostKeychecking=no" git clone git@github.com:Goggot/linux-setup.git
   fi
 
-  cd -
+  cd
 
   if [ -d '/opt/linux-setup' ]; then
     chown bottyboop -R /opt/linux-setup
