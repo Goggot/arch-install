@@ -459,7 +459,7 @@ if [[ "${INSTALL_TYPE}" == "full" ]]; then
   fi
 
   # Install configuration
-  echo "desktop-${desktop}" > "/tmp/systype"
+  echo "desktop-${desktop}" > /etc/systype
   /opt/linux-setup/scripts/restore.bash
 fi
 EOF
