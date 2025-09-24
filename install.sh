@@ -351,7 +351,9 @@ pacman -S --noconfirm --needed \
   curl \
   diffutils \
   gettext \
-  go
+  go \
+  htop \
+  networkmanager
 
 # Base desktop install
 if [[ "${desktop_install}" == "y" ]]; then
