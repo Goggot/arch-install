@@ -314,8 +314,7 @@ cd /tmp/yay
 chown -R bottyboop: .
 sudo -u bottyboop makepkg
 pacman -U --noconfirm yay-*pkg.tar.*
-cd
-rm -rf /tmp/yay*
+cd /
 
 # Configure users
 useradd -mU ${MAIN_USER} &>/dev/null
@@ -399,6 +398,8 @@ if [[ "${desktop_install}" == "y" ]]; then
   esac
 fi
 
+cd /
+
 # Cleanup
 pacman -Rc kmix --noconfirm
 
@@ -450,8 +451,6 @@ if [[ "${INSTALL_TYPE}" == "full" ]]; then
     cd /opt/
     GIT_SSH_COMMAND="ssh -o StrictHostKeychecking=no" git clone git@github.com:Goggot/linux-setup.git
   fi
-
-  cd
 
   if [ -d '/opt/linux-setup' ]; then
     chown bottyboop -R /opt/linux-setup
