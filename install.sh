@@ -394,7 +394,7 @@ systemctl enable apparmor.service
 if ${UEFI}; then
   grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 else
-  grub-install --target=i386-pc /dev/sda
+  grub-install --target=i386-pc ${DISK}
 fi
 ${CLEARROOT} || sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="cryptdevice=\/dev\/mapper\/${DISK_UUID}_${HOSTNAME}-root:${DISK_UUID}-root"/g' /etc/default/grub
 sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=".*/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash apparmor=1 security=apparmor"/g' /etc/default/grub
