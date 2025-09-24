@@ -287,6 +287,10 @@ fi
 # Pushing configuration script
 cat >"${MOUNTPOINT}/opt/install-after-chroot.sh" <<EOF
 
+# Install background user
+useradd -mUr -d /opt/bottyboop bottyboop &>/dev/null
+echo 'bottyboop ALL=(ALL) NOPASSWD: ALL' >>/etc/sudoers
+
 # Activate additionnal repositories #
 if [[ -f /etc/pacman.conf.ori ]]; then
   cp /etc/pacman.conf /etc/pacman.conf.ori
@@ -307,7 +311,8 @@ pacman -Sd yajl wget diffutils gettext go --noconfirm --needed
 wget -q https://aur.archlinux.org/cgit/aur.git/snapshot/yay.tar.gz -O "/tmp/yay.tar.gz"
 tar -xvf "/tmp/yay.tar.gz" -C "/tmp/"
 cd "/tmp/yay"
-makepkg
+chown -R bottyboop: .
+sudo -u bottyboop makepkg
 pacman -U --noconfirm yay-*pkg.tar.*
 rm -rf "/tmp/yay*"
 
@@ -436,9 +441,6 @@ os-prober
 grub-mkconfig -o /boot/grub/grub.cfg
 
 if [[ "${INSTALL_TYPE}" == "full" ]]; then
-  useradd -mUr -d /opt/bottyboop bottyboop &>/dev/null
-  echo 'bottyboop ALL=(ALL) NOPASSWD: ALL' >>/etc/sudoers
-
   if [[ -d /opt/linux-setup ]]; then
     cd /opt/linux-setup
     git stash
