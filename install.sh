@@ -326,7 +326,7 @@ passwd ${MAIN_USER} --stdin <<< ${password}
 sed -i "s|^#ParallelDownloads.*|ParallelDownloads = ${PACMAN_PARALLEL}|g" /etc/pacman.conf
 
 # Extra pkg install
-yay -S --noconfirm --needed \
+pacman -S --noconfirm --needed \
   grub \
   os-prober \
   efivar \
@@ -358,7 +358,7 @@ yay -S --noconfirm --needed \
 if [[ "${desktop_install}" == "y" ]]; then
   case "${desktop}" in
     "plasma")
-      yay -S --noconfirm --needed \
+      sudo -u bottyboop yay -S --noconfirm --needed \
         plasma \
         kde-applications \
         sddm \
@@ -367,12 +367,12 @@ if [[ "${desktop_install}" == "y" ]]; then
       ;;
 
     "gnome")
-      yay -S --noconfirm --needed gnome gnome-extra gdm && \
+      sudo -u bottyboop yay -S --noconfirm --needed gnome gnome-extra gdm && \
         systemctl enable gdm
       ;;
 
     "hyprland")
-      yay -S --noconfirm --needed \
+      sudo -u bottyboop yay -S --noconfirm --needed \
         hyprland \
         hyprpaper \
         hypridle \
@@ -400,7 +400,7 @@ if [[ "${desktop_install}" == "y" ]]; then
 fi
 
 # Cleanup
-yay -Rc kmix --noconfirm
+pacman -Rc kmix --noconfirm
 
 # Locale config
 systemctl enable ntpd
