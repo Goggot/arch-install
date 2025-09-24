@@ -250,10 +250,36 @@ EOF
 # BOOTSTRAP #
 #############
 
+# Repo updates
+pacman -Syy
+
+# Activate additionnal repositories #
+if [[ -f /etc/pacman.conf.ori ]]; then
+  cp /etc/pacman.conf /etc/pacman.conf.ori
+fi
+sed -i '/^SigLevel    = /c\SigLevel =    Never' /etc/pacman.conf
+sed -i 's|^#Color|Color|g' /etc/pacman.conf
+sed -i 's|^#TotalDownload|TotalDownload|g' /etc/pacman.conf
+sed -i 's|^#ParallelDownloads.*|ParallelDownloads = 20|g' /etc/pacman.conf
+if ! $(grep -Fx [multilib] /etc/pacman.conf &>/dev/null); then
+  cp "/etc/pacman.conf" "/tmp/pacman.conf"
+  echo '[multilib]' >> "/tmp/pacman.conf" &>/dev/null
+  echo 'Include = /etc/pacman.d/mirrorlist' >> "/tmp/pacman.conf" &>/dev/null
+  cp "/tmp/pacman.conf" "/etc/pacman.conf"
+fi
+
+# Install yay & dependencies #
+pacman -Sd yajl wget diffutils gettext go --noconfirm --needed
+wget -q https://aur.archlinux.org/cgit/aur.git/snapshot/yay.tar.gz -O "/tmp/yay.tar.gz"
+tar -xvf "/tmp/yay.tar.gz" -C "/tmp/"
+cd "/tmp/yay"
+makepkg
+pacman -U --noconfirm yay-*pkg.tar.*
+rm -rf "/tmp/yay*"
+
 # Installing base system
 timedatectl set-ntp true
 sed -i "s|^#ParallelDownloads.*|ParallelDownloads = ${PACMAN_PARALLEL}|g" /etc/pacman.conf
-pacman -Syy
 pacman -S --noconfirm --needed reflector
 mkdir -p "${MOUNTPOINT}/etc/pacman.d" "/etc/pacman.d"
 echo
@@ -294,7 +320,7 @@ passwd ${MAIN_USER} --stdin <<< ${password}
 sed -i "s|^#ParallelDownloads.*|ParallelDownloads = ${PACMAN_PARALLEL}|g" /etc/pacman.conf
 
 # Extra pkg install
-pacman -S --noconfirm --needed \
+yay -S --noconfirm --needed \
   grub \
   os-prober \
   efivar \
@@ -326,17 +352,21 @@ pacman -S --noconfirm --needed \
 if [[ "${desktop_install}" == "y" ]]; then
   case "${desktop}" in
     "plasma")
-      pacman -S --noconfirm --needed plasma kde-applications sddm && \
-        systemctl enable sddm
+      yay -S --noconfirm --needed \
+        plasma \
+        kde-applications \
+        sddm \
+        sddm-catppuccin-git && \
+          sudo systemctl enable sddm
       ;;
 
     "gnome")
-      pacman -S --noconfirm --needed gnome gnome-extra gdm && \
+      yay -S --noconfirm --needed gnome gnome-extra gdm && \
         systemctl enable gdm
       ;;
 
     "hyprland")
-      pacman -S --noconfirm --needed \
+      yay -S --noconfirm --needed \
         hyprland \
         hyprpaper \
         hypridle \
@@ -355,14 +385,16 @@ if [[ "${desktop_install}" == "y" ]]; then
         mako \
         uwsm \
         ngw-look \
-        sddm && \
-          systemctl enable sddm
+        sddm \
+        where-is-my-sddm-theme-git && \
+          sudo sed -i 's/Current=.*/Current=where_is_my_sddm_theme/' /etc/sddm.conf.d/theme.conf && \
+            sudo systemctl enable sddm
       ;;
   esac
 fi
 
 # Cleanup
-pacman -Rc kmix --noconfirm
+yay -Rc kmix --noconfirm
 
 # Locale config
 systemctl enable ntpd
@@ -425,6 +457,7 @@ if [[ "${INSTALL_TYPE}" == "full" ]]; then
   fi
 
   # Install configuration
+  echo "desktop-${desktop}" > "/tmp/systype"
   /opt/linux-setup/scripts/restore.bash
 fi
 EOF
