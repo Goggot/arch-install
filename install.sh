@@ -307,14 +307,15 @@ if ! $(grep -Fx [multilib] /etc/pacman.conf &>/dev/null); then
 fi
 
 # Install yay & dependencies #
-pacman -Sd yajl wget diffutils gettext go --noconfirm --needed
-wget -q https://aur.archlinux.org/cgit/aur.git/snapshot/yay.tar.gz -O "/tmp/yay.tar.gz"
-tar -xvf "/tmp/yay.tar.gz" -C "/tmp/"
-cd "/tmp/yay"
+pacman -Sd git yajl wget diffutils gettext go --noconfirm --needed
+wget -q https://aur.archlinux.org/cgit/aur.git/snapshot/yay.tar.gz -O /tmp/yay.tar.gz
+tar -xvf /tmp/yay.tar.gz -C /tmp/
+cd /tmp/yay
 chown -R bottyboop: .
 sudo -u bottyboop makepkg
 pacman -U --noconfirm yay-*pkg.tar.*
-rm -rf "/tmp/yay*"
+cd
+rm -rf /tmp/yay*
 
 # Configure users
 useradd -mU ${MAIN_USER} &>/dev/null
