@@ -288,37 +288,31 @@ fi
 cat >"${MOUNTPOINT}/opt/install-after-chroot.sh" <<EOF
 
 # Activate additionnal repositories #
-logtitle "Activating additionnal repositories"
 if [[ -f /etc/pacman.conf.ori ]]; then
-  sudo cp /etc/pacman.conf /etc/pacman.conf.ori
+  cp /etc/pacman.conf /etc/pacman.conf.ori
 fi
-sudo sed -i '/^SigLevel    = /c\SigLevel =    Never' /etc/pacman.conf
-sudo sed -i 's|^#Color|Color|g' /etc/pacman.conf
-sudo sed -i 's|^#TotalDownload|TotalDownload|g' /etc/pacman.conf
-sudo sed -i 's|^#ParallelDownloads.*|ParallelDownloads = 20|g' /etc/pacman.conf
+sed -i '/^SigLevel    = /c\SigLevel =    Never' /etc/pacman.conf
+sed -i 's|^#Color|Color|g' /etc/pacman.conf
+sed -i 's|^#TotalDownload|TotalDownload|g' /etc/pacman.conf
+sed -i 's|^#ParallelDownloads.*|ParallelDownloads = 20|g' /etc/pacman.conf
 if ! $(grep -Fx [multilib] /etc/pacman.conf &>/dev/null); then
-  sudo cp "/etc/pacman.conf" "/tmp/pacman.conf"
-  echo '[multilib]' | sudo tee --append "/tmp/pacman.conf" &>/dev/null
-  echo 'Include = /etc/pacman.d/mirrorlist' | sudo tee --append "/tmp/pacman.conf" &>/dev/null
-  sudo cp "/tmp/pacman.conf" "/etc/pacman.conf"
+  cp "/etc/pacman.conf" "/tmp/pacman.conf"
+  echo '[multilib]' | tee --append "/tmp/pacman.conf" &>/dev/null
+  echo 'Include = /etc/pacman.d/mirrorlist' | tee --append "/tmp/pacman.conf" &>/dev/null
+  cp "/tmp/pacman.conf" "/etc/pacman.conf"
 fi
 
 # Install yay & dependencies #
-if ! $(which yay &>/dev/null); then
-  logtitle "Installing yay"
-  sudo pacman -Syy && sudo pacman -Sd yajl wget diffutils gettext go --noconfirm --needed
-  wget -q https://aur.archlinux.org/cgit/aur.git/snapshot/yay.tar.gz -O "/tmp/yay.tar.gz"
-  tar -xvf "/tmp/yay.tar.gz" -C "/tmp/"
-  cd "/tmp/yay"
-  makepkg
-  sudo pacman -U --noconfirm yay-*pkg.tar.*
-  rm -rf "/tmp/yay*"
-else
-  logtitle "Yay already installed"
-fi
+pacman -Sd yajl wget diffutils gettext go --noconfirm --needed
+wget -q https://aur.archlinux.org/cgit/aur.git/snapshot/yay.tar.gz -O "/tmp/yay.tar.gz"
+tar -xvf "/tmp/yay.tar.gz" -C "/tmp/"
+cd "/tmp/yay"
+makepkg
+pacman -U --noconfirm yay-*pkg.tar.*
+rm -rf "/tmp/yay*"
 
 # Configure users
-sudo useradd -mU ${MAIN_USER} &>/dev/null
+useradd -mU ${MAIN_USER} &>/dev/null
 echo '${MAIN_USER} ALL=(ALL) NOPASSWD: ALL' >>/etc/sudoers
 passwd ${MAIN_USER} --stdin <<< ${password}
 
@@ -363,7 +357,7 @@ if [[ "${desktop_install}" == "y" ]]; then
         kde-applications \
         sddm \
         sddm-catppuccin-git && \
-          sudo systemctl enable sddm
+          systemctl enable sddm
       ;;
 
     "gnome")
@@ -393,8 +387,8 @@ if [[ "${desktop_install}" == "y" ]]; then
         ngw-look \
         sddm \
         where-is-my-sddm-theme-git && \
-          sudo sed -i 's/Current=.*/Current=where_is_my_sddm_theme/' /etc/sddm.conf.d/theme.conf && \
-            sudo systemctl enable sddm
+          sed -i 's/Current=.*/Current=where_is_my_sddm_theme/' /etc/sddm.conf.d/theme.conf && \
+            systemctl enable sddm
       ;;
   esac
 fi
@@ -442,7 +436,7 @@ os-prober
 grub-mkconfig -o /boot/grub/grub.cfg
 
 if [[ "${INSTALL_TYPE}" == "full" ]]; then
-  sudo useradd -mUr -d /opt/bottyboop bottyboop &>/dev/null
+  useradd -mUr -d /opt/bottyboop bottyboop &>/dev/null
   echo 'bottyboop ALL=(ALL) NOPASSWD: ALL' >>/etc/sudoers
 
   if [[ -d /opt/linux-setup ]]; then
