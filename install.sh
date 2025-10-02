@@ -415,6 +415,9 @@ echo "${HOSTNAME}" >/etc/hostname
 echo "127.0.0.1     ${HOSTNAME}" >/etc/hosts
 locale-gen
 
+# Enable NetworkManager
+systemctl enable NetworkManager.service
+
 # Adding LUKS stuff; ORDER IS IMPORTANT
 if ${CLEARROOT}; then
   sed -i 's/HOOKS=(.*/HOOKS=(base udev autodetect modconf keyboard keymap block lvm2 resume filesystems fsck)/g' /etc/mkinitcpio.conf
