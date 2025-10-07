@@ -418,6 +418,9 @@ locale-gen
 # Enable NetworkManager
 systemctl enable NetworkManager.service
 
+# Enable ssh server
+systemctl enable sshd.service
+
 # Adding LUKS stuff; ORDER IS IMPORTANT
 if ${CLEARROOT}; then
   sed -i 's/HOOKS=(.*/HOOKS=(base udev autodetect modconf keyboard keymap block lvm2 resume filesystems fsck)/g' /etc/mkinitcpio.conf
