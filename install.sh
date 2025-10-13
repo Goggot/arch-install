@@ -306,8 +306,8 @@ if ! $(grep -Fx [multilib] /etc/pacman.conf &>/dev/null); then
   cp "/tmp/pacman.conf" "/etc/pacman.conf"
 fi
 
-# Install yay & dependencies #
-pacman -Sd git yajl wget diffutils gettext go --noconfirm --needed
+# Install yay & dependencies
+pacman -Sd --noconfirm --needed git yajl wget diffutils gettext go debugedit fakeroot make gcc
 wget -q https://aur.archlinux.org/cgit/aur.git/snapshot/yay.tar.gz -O /tmp/yay.tar.gz
 tar -xvf /tmp/yay.tar.gz -C /tmp/
 cd /tmp/yay
